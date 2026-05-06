@@ -1,3 +1,5 @@
+require('dotenv').config({quiet: true});
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -66,7 +68,6 @@ app.use('/api', dataDelete);
 
 app.use(bodyParser.json({limit: '10mb'}));
 
-require('dotenv').config({quiet: true});
 
 const port = process.env.PORT || 5001;
 const clientUrl = process.env.CLIENT_URL;
@@ -502,16 +503,28 @@ app.post('/staffName', async (req, res) => {
 
 // Database Authenticate Coding
 
-sequelize_conn.authenticate()
+// sequelize_conn.authenticate()
 
+//     .then(() => {
+//         console.log('Database Connected');
+//         app.listen(port, () => {
+//             console.log(`Server running on http:/localhost:${port}`);
+//         });
+//     })
+//     .catch(err => {
+//         console.error('Unable to connect to the Database:', err);
+//     });
+
+sequelize_conn.sync({alter: true})   // 👈 important
     .then(() => {
-        console.log('Database Connected');
+        console.log('Database & Tables Ready ✅');
+
         app.listen(port, () => {
-            console.log(`Server running on http:/localhost:${port}`);
+            console.log(`Server running on http://localhost:${port}`);
         });
     })
     .catch(err => {
-        console.error('Unable to connect to the Database:', err);
+        console.error('DB Error:', err);
     });
 
 // ------------------------------------------------------------------------------------------------------- //
